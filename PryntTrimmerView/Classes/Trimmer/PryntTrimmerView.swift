@@ -78,7 +78,7 @@ public protocol TrimmerViewDelegate: class {
     public var handleWidth: CGFloat = 15
 
     /// The maximum duration allowed for the trimming. Change it before setting the asset, as the asset preview
-    public var maxDuration: Double = 15 {
+    public override var maxDuration: Double = 15 {
         didSet {
             assetPreview.maxDuration = maxDuration
         }
