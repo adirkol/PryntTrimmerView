@@ -45,14 +45,6 @@ public protocol TrimmerViewDelegate: class {
             positionBar.backgroundColor = positionBarColor
         }
     }
-  
-    /// The color used to mask unselected parts of the video
-    @IBInspectable public var maskColor: UIColor = UIColor.white {
-        didSet {
-            leftMaskView.backgroundColor = maskColor
-            rightMaskView.backgroundColor = maskColor
-        }
-    }
 
     // MARK: Interface
 
@@ -77,17 +69,29 @@ public protocol TrimmerViewDelegate: class {
     private var rightConstraint: NSLayoutConstraint?
     private var positionConstraint: NSLayoutConstraint?
 
-    private let handleWidth: CGFloat = 15
+    public var maskColor: UIColor = .white {
+        didSet{
+            leftMaskView.backgroundColor = maskColor
+            rightMaskView.backgroundColor = maskColor
+        }
+    }
+    public var handleWidth: CGFloat = 15
+
+    /// The maximum duration allowed for the trimming. Change it before setting the asset, as the asset preview
+    public var maxDuration: Double = 15 {
+        didSet {
+            assetPreview.maxDuration = maxDuration
+        }
+    }
 
     /// The minimum duration allowed for the trimming. The handles won't pan further if the minimum duration is attained.
-    public var minDuration: Double = 3
+    public var minDuration: Double = 1
 
     // MARK: - View & constraints configurations
 
     override func setupSubviews() {
+
         super.setupSubviews()
-        layer.cornerRadius = 2
-        layer.masksToBounds = true
         backgroundColor = UIColor.clear
         layer.zPosition = 1
         setupTrimmerView()
@@ -107,8 +111,9 @@ public protocol TrimmerViewDelegate: class {
     }
 
     private func setupTrimmerView() {
+
         trimView.layer.borderWidth = 2.0
-        trimView.layer.cornerRadius = 2.0
+        trimView.layer.cornerRadius = 6.0
         trimView.translatesAutoresizingMaskIntoConstraints = false
         trimView.isUserInteractionEnabled = false
         addSubview(trimView)
@@ -124,9 +129,15 @@ public protocol TrimmerViewDelegate: class {
     private func setupHandleView() {
 
         leftHandleView.isUserInteractionEnabled = true
-        leftHandleView.layer.cornerRadius = 2.0
+        //leftHandleView.layer.cornerRadius = 6.0
+        leftHandleView.clipsToBounds = true
+        leftHandleView.layer.cornerRadius = 6.0
+        if #available(iOS 11.0, *) {
+            leftHandleView.layer.maskedCorners = [.layerMinXMaxYCorner, .layerMinXMinYCorner]
+        }
         leftHandleView.translatesAutoresizingMaskIntoConstraints = false
         addSubview(leftHandleView)
+      
 
         leftHandleView.heightAnchor.constraint(equalTo: heightAnchor).isActive = true
         leftHandleView.widthAnchor.constraint(equalToConstant: handleWidth).isActive = true
@@ -142,7 +153,12 @@ public protocol TrimmerViewDelegate: class {
         leftHandleKnob.centerXAnchor.constraint(equalTo: leftHandleView.centerXAnchor).isActive = true
 
         rightHandleView.isUserInteractionEnabled = true
-        rightHandleView.layer.cornerRadius = 2.0
+        //rightHandleView.layer.cornerRadius = 6.0
+        rightHandleView.clipsToBounds = true
+        rightHandleView.layer.cornerRadius = 6.0
+        if #available(iOS 11.0, *) {
+            rightHandleView.layer.maskedCorners = [.layerMaxXMaxYCorner, .layerMaxXMinYCorner]
+        }
         rightHandleView.translatesAutoresizingMaskIntoConstraints = false
         addSubview(rightHandleView)
 
@@ -172,6 +188,8 @@ public protocol TrimmerViewDelegate: class {
         leftMaskView.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
         leftMaskView.topAnchor.constraint(equalTo: topAnchor).isActive = true
         leftMaskView.rightAnchor.constraint(equalTo: leftHandleView.centerXAnchor).isActive = true
+       
+       
 
         rightMaskView.isUserInteractionEnabled = false
         rightMaskView.backgroundColor = .white
@@ -344,3 +362,4 @@ public protocol TrimmerViewDelegate: class {
         updateSelectedTime(stoppedMoving: false)
     }
 }
+
