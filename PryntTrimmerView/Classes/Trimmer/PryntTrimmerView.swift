@@ -63,10 +63,10 @@ public protocol TrimmerViewDelegate: class {
 
     // MARK: Constraints
 
-    private var currentLeftConstraint: CGFloat = 0
-    private var currentRightConstraint: CGFloat = 0
-    private var leftConstraint: NSLayoutConstraint?
-    private var rightConstraint: NSLayoutConstraint?
+    public var currentLeftConstraint: CGFloat = 0
+    public var currentRightConstraint: CGFloat = 0
+    public var leftConstraint: NSLayoutConstraint?
+    public var rightConstraint: NSLayoutConstraint?
     private var positionConstraint: NSLayoutConstraint?
 
     public var maskColor: UIColor = .white {
@@ -78,7 +78,7 @@ public protocol TrimmerViewDelegate: class {
     public var handleWidth: CGFloat = 15
 
     /// The maximum duration allowed for the trimming. Change it before setting the asset, as the asset preview
-    public override var maxDuration: Double = 15 {
+    public override var maxDuration: Double {
         didSet {
             assetPreview.maxDuration = maxDuration
         }
@@ -274,7 +274,7 @@ public protocol TrimmerViewDelegate: class {
         }
     }
 
-    private func updateLeftConstraint(with translation: CGPoint) {
+    public func updateLeftConstraint(with translation: CGPoint) {
         let maxConstraint = max(rightHandleView.frame.origin.x - handleWidth - minimumDistanceBetweenHandle, 0)
         let newConstraint = min(max(0, currentLeftConstraint + translation.x), maxConstraint)
         leftConstraint?.constant = newConstraint
