@@ -237,6 +237,8 @@ public protocol TrimmerViewDelegate: class {
     private func updateHandleColor() {
         leftHandleKnob.backgroundColor = handleColor
         rightHandleKnob.backgroundColor = handleColor
+        leftHandleKnob.layer.cornerRadius = 1
+        rightHandleKnob.layer.cornerRadius = 1
     }
 
     // MARK: - Trim Gestures
