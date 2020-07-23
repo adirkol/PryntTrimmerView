@@ -67,9 +67,9 @@ public class AVAssetTimeSelector: UIView, UIScrollViewDelegate {
     }
 
     func assetDidChange(newAsset: AVAsset?) {
-        if let asset = newAsset {
+        /*if let asset = newAsset {
             assetPreview.regenerateThumbnails(for: asset)
-        }
+        }*/
     }
 
     // MARK: - Time & Position Equivalence
