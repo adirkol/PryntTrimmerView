@@ -142,6 +142,7 @@ public protocol TrimmerViewDelegate: class {
         leftHandleView.heightAnchor.constraint(equalTo: heightAnchor).isActive = true
         leftHandleView.widthAnchor.constraint(equalToConstant: handleWidth).isActive = true
         leftHandleView.leftAnchor.constraint(equalTo: trimView.leftAnchor).isActive = true
+  
         leftHandleView.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
 
         leftHandleKnob.translatesAutoresizingMaskIntoConstraints = false
@@ -182,12 +183,16 @@ public protocol TrimmerViewDelegate: class {
         leftMaskView.backgroundColor = .white
         leftMaskView.alpha = 0.7
         leftMaskView.translatesAutoresizingMaskIntoConstraints = false
+        leftMaskView.layer.cornerRadius = 6
+        leftMaskView.layer.masksToBounds = true
         insertSubview(leftMaskView, belowSubview: leftHandleView)
 
-        leftMaskView.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
+        leftMaskView.leftAnchor.constraint(equalTo: leftAnchor, constant: 15.0).isActive = true
+
         leftMaskView.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
         leftMaskView.topAnchor.constraint(equalTo: topAnchor).isActive = true
-        leftMaskView.rightAnchor.constraint(equalTo: leftHandleView.centerXAnchor).isActive = true
+        leftMaskView.rightAnchor.constraint(equalTo: leftHandleView.rightAnchor).isActive = true
+        //leftMaskView.rightAnchor.constraint(equalTo: leftHandleView.centerXAnchor, constant: 0).isActive = true
        
        
 
@@ -195,12 +200,14 @@ public protocol TrimmerViewDelegate: class {
         rightMaskView.backgroundColor = .white
         rightMaskView.alpha = 0.7
         rightMaskView.translatesAutoresizingMaskIntoConstraints = false
+        rightMaskView.layer.cornerRadius = 6
+        rightMaskView.layer.masksToBounds = true
         insertSubview(rightMaskView, belowSubview: rightHandleView)
 
-        rightMaskView.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
+        rightMaskView.rightAnchor.constraint(equalTo: rightAnchor, constant: -15).isActive = true
         rightMaskView.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
         rightMaskView.topAnchor.constraint(equalTo: topAnchor).isActive = true
-        rightMaskView.leftAnchor.constraint(equalTo: rightHandleView.centerXAnchor).isActive = true
+        rightMaskView.leftAnchor.constraint(equalTo: rightHandleView.leftAnchor).isActive = true
     }
 
     private func setupPositionBar() {
