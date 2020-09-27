@@ -10,8 +10,8 @@ import AVFoundation
 import UIKit
 
 public protocol TrimmerViewDelegate: class {
-    func didChangePositionBar(_ playerTime: CMTime)
-    func positionBarStoppedMoving(_ playerTime: CMTime)
+    func didChangePositionBar(_ playerTime: CMTime, isLeftHandle:Bool)
+    func positionBarStoppedMoving(_ playerTime: CMTime, isLeftHandle:Bool)
 }
 
 /// A view to select a specific time range of a video. It consists of an asset preview with thumbnails inside a scroll view, two
@@ -56,8 +56,8 @@ public protocol TrimmerViewDelegate: class {
     private let leftHandleView = HandlerView()
     private let rightHandleView = HandlerView()
     private let positionBar = UIView()
-    private let leftHandleKnob = UIView()
-    private let rightHandleKnob = UIView()
+    public let leftHandleKnob = UIView()
+    public let rightHandleKnob = UIView()
     private let leftMaskView = UIView()
     private let rightMaskView = UIView()
 
@@ -75,7 +75,7 @@ public protocol TrimmerViewDelegate: class {
             rightMaskView.backgroundColor = maskColor
         }
     }
-    public var handleWidth: CGFloat = 15
+    public var handleWidth: CGFloat = 12
 
     /// The maximum duration allowed for the trimming. Change it before setting the asset, as the asset preview
     public override var maxDuration: Double {
@@ -187,7 +187,7 @@ public protocol TrimmerViewDelegate: class {
         leftMaskView.layer.masksToBounds = true
         insertSubview(leftMaskView, belowSubview: leftHandleView)
 
-        leftMaskView.leftAnchor.constraint(equalTo: leftAnchor, constant: 15.0).isActive = true
+        leftMaskView.leftAnchor.constraint(equalTo: leftAnchor, constant: 12).isActive = true
 
         leftMaskView.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
         leftMaskView.topAnchor.constraint(equalTo: topAnchor).isActive = true
@@ -204,7 +204,7 @@ public protocol TrimmerViewDelegate: class {
         rightMaskView.layer.masksToBounds = true
         insertSubview(rightMaskView, belowSubview: rightHandleView)
 
-        rightMaskView.rightAnchor.constraint(equalTo: rightAnchor, constant: -15).isActive = true
+        rightMaskView.rightAnchor.constraint(equalTo: rightAnchor, constant: -12).isActive = true
         rightMaskView.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
         rightMaskView.topAnchor.constraint(equalTo: topAnchor).isActive = true
         rightMaskView.leftAnchor.constraint(equalTo: rightHandleView.leftAnchor).isActive = true
@@ -261,7 +261,7 @@ public protocol TrimmerViewDelegate: class {
             } else {
                 currentRightConstraint = rightConstraint!.constant
             }
-            updateSelectedTime(stoppedMoving: false)
+            updateSelectedTime(stoppedMoving: false, isLeftHandle: isLeftGesture)
         case .changed:
             let translation = gestureRecognizer.translation(in: superView)
             if isLeftGesture {
@@ -275,10 +275,10 @@ public protocol TrimmerViewDelegate: class {
             } else if let endTime = endTime {
                 seek(to: endTime)
             }
-            updateSelectedTime(stoppedMoving: false)
+            updateSelectedTime(stoppedMoving: false, isLeftHandle: isLeftGesture)
 
         case .cancelled, .ended, .failed:
-            updateSelectedTime(stoppedMoving: true)
+            updateSelectedTime(stoppedMoving: true, isLeftHandle: isLeftGesture)
         default: break
         }
     }
@@ -335,14 +335,14 @@ public protocol TrimmerViewDelegate: class {
         return getTime(from: endPosition)
     }
 
-    private func updateSelectedTime(stoppedMoving: Bool) {
+    private func updateSelectedTime(stoppedMoving: Bool, isLeftHandle:Bool) {
         guard let playerTime = positionBarTime else {
             return
         }
         if stoppedMoving {
-            delegate?.positionBarStoppedMoving(playerTime)
+            delegate?.positionBarStoppedMoving(playerTime, isLeftHandle: isLeftHandle)
         } else {
-            delegate?.didChangePositionBar(playerTime)
+            delegate?.didChangePositionBar(playerTime, isLeftHandle: isLeftHandle)
         }
     }
 
@@ -359,16 +359,16 @@ public protocol TrimmerViewDelegate: class {
     // MARK: - Scroll View Delegate
 
     public func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
-        updateSelectedTime(stoppedMoving: true)
+        //updateSelectedTime(stoppedMoving: true)
     }
 
     public func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
         if !decelerate {
-            updateSelectedTime(stoppedMoving: true)
+            //updateSelectedTime(stoppedMoving: true)
         }
     }
     public func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        updateSelectedTime(stoppedMoving: false)
+        //updateSelectedTime(stoppedMoving: false)
     }
 }
 
