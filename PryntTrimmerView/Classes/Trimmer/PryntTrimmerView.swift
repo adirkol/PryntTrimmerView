@@ -76,7 +76,7 @@ public protocol TrimmerViewDelegate: class {
         }
     }
     public var handleWidth: CGFloat = 12
-
+    public var isTrimmingAllowed:Bool = true
     /// The maximum duration allowed for the trimming. Change it before setting the asset, as the asset preview
     public override var maxDuration: Double {
         didSet {
@@ -251,6 +251,7 @@ public protocol TrimmerViewDelegate: class {
     // MARK: - Trim Gestures
 
     @objc func handlePanGesture(_ gestureRecognizer: UIPanGestureRecognizer) {
+        
         guard let view = gestureRecognizer.view, let superView = gestureRecognizer.view?.superview else { return }
         let isLeftGesture = view == leftHandleView
         switch gestureRecognizer.state {
@@ -263,6 +264,9 @@ public protocol TrimmerViewDelegate: class {
             }
             updateSelectedTime(stoppedMoving: false, isLeftHandle: isLeftGesture)
         case .changed:
+            if !self.isTrimmingAllowed{
+                return
+            }
             let translation = gestureRecognizer.translation(in: superView)
             if isLeftGesture {
                 updateLeftConstraint(with: translation)
