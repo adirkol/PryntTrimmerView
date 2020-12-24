@@ -84,8 +84,14 @@ public protocol TrimmerViewDelegate: class {
         }
     }
 
+    public  override var preferredTimeScale: CMTimeScale {
+        didSet {
+            assetPreview.preferredTimeScale = preferredTimeScale
+        }
+    }
+    
     /// The minimum duration allowed for the trimming. The handles won't pan further if the minimum duration is attained.
-    public var minDuration: Double = 1
+    public var minDuration: Double = 1.0
 
     // MARK: - View & constraints configurations
 
@@ -326,7 +332,7 @@ public protocol TrimmerViewDelegate: class {
             layoutIfNeeded()
         }
     }
-
+    
     /// The selected start time for the current asset.
     public var startTime: CMTime? {
         let startPosition = leftHandleView.frame.origin.x + assetPreview.contentOffset.x
@@ -356,8 +362,11 @@ public protocol TrimmerViewDelegate: class {
     }
 
     private var minimumDistanceBetweenHandle: CGFloat {
-        guard let asset = asset else { return 0 }
-        return CGFloat(minDuration) * assetPreview.contentView.frame.width / CGFloat(asset.duration.seconds)
+        var duration = self.maxDuration
+        if let asset = asset {
+            duration = asset.duration.seconds
+        }
+        return CGFloat(minDuration) * assetPreview.contentView.frame.width / CGFloat(duration) /*CGFloat(asset.duration.seconds)*/
     }
 
     // MARK: - Scroll View Delegate

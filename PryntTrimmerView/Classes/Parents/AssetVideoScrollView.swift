@@ -15,6 +15,7 @@ class AssetVideoScrollView: UIScrollView {
 
     let contentView = UIView()
     public var maxDuration: Double = 15
+    public var preferredTimeScale: CMTimeScale = 60
     private var generator: AVAssetImageGenerator?
 
     override init(frame: CGRect) {
