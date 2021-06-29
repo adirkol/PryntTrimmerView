@@ -63,6 +63,7 @@ public protocol TrimmerViewDelegate: class {
 
     // MARK: Constraints
 
+    
     public var currentLeftConstraint: CGFloat = 0
     public var currentRightConstraint: CGFloat = 0
     public var leftConstraint: NSLayoutConstraint?
@@ -93,6 +94,20 @@ public protocol TrimmerViewDelegate: class {
     /// The minimum duration allowed for the trimming. The handles won't pan further if the minimum duration is attained.
     public var minDuration: Double = 1.0
 
+    public var contentWidth: CGFloat{
+        return durationSize
+    }
+    public var endLocation:CGFloat{
+        get{
+            rightHandleView.frame.origin.x - rightHandleView.frame.width
+        }
+    }
+    
+    public var startLocation:CGFloat{
+        get{
+            leftHandleView.frame.origin.x
+        }
+    }
     // MARK: - View & constraints configurations
 
     override func setupSubviews() {
